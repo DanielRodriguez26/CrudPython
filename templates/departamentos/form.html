@@ -1,0 +1,48 @@
+{% extends 'body.html' %}
+
+
+{% block content %}
+  <form action="/create" method="POST">
+    <div class="card card-default card-primary">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="fas fa-plus"></i>
+          Nuevo Departamento
+        </h3>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <div class="form-group">
+          <label>Departamento:</label>
+          <input type="text" class="form-control" placeholder="Ingrese un Departamento" name="nom_departamento">
+        </div>
+      </div>
+      <!-- /.card-body -->
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary btnTest "><i class="fas fa-save"></i> Guardar</button>
+        <a href="/" class="btn btn-danger ">
+          <i class="fas fa-times"></i> Cancelar
+        </a>
+      </div>
+
+      <!-- /.card-body -->
+    </div>
+  </form>
+  <script>
+  {% with messages = get_flashed_messages() %}
+    var error = '';
+    {% if messages %}
+      {% for message in messages %}
+         error += '{{ message }} ';
+      {% endfor %}
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error,
+
+      })
+    {% endif %}
+  {% endwith %}
+
+  </script>
+{% endblock %}

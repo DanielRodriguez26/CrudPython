@@ -1,0 +1,116 @@
+{% extends 'body.html' %}
+
+{% block head %}
+  <link rel="stylesheet"
+        href="{{ url_for( 'static', filename='lib/datatables-1.10.20/css/dataTables.bootstrap4.min.css') }}"/>
+  <link rel="stylesheet"
+        href="{{ url_for( 'static', filename='lib/datatables-1.10.20/plugins/responsive-2.2.3/css/responsive.bootstrap4.min.css') }}"/>
+  <script src="{{ url_for( 'static', filename='lib/datatables-1.10.20/js/jquery.dataTables.js') }}"></script>
+  <script src="{{ url_for( 'static', filename='lib/datatables-1.10.20/js/dataTables.bootstrap4.min.js') }}"></script>
+  <script
+    src="{{ url_for( 'static', filename='lib/datatables-1.10.20/plugins/responsive-2.2.3/js/dataTables.responsive.min.js') }}"></script>
+  <script
+    src="{{ url_for( 'static', filename='lib/datatables-1.10.20/plugins/responsive-2.2.3/js/responsive.bootstrap4.min.js') }}"></script>
+  <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+  {% block head_list %}
+
+  {% endblock %}
+{% endblock %}
+{% block content %}
+  <div class="card card-default card-primary">
+    <div class="card-header">
+      <h3 class="card-title">
+        <i class="fas fa-search"></i>
+        Departamentos
+      </h3>
+      <a href="/from_muni" class="btn btn-success btn-flat float-right">
+        <i class="fas fa-plus"></i> Nuevo Municipio
+      </a>
+    </div>
+    <div class="card-body">
+      <table class="table" id="data">
+        <thead>
+        <tr>
+
+          <th scope="col">N°</th>
+          <th scope="col">Departamento</th>
+          <th scope="col">Options</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for departamento in departamentos %}
+          <tr>
+            <td>{{ departamento.0 }}</td>
+            <td>{{ departamento.1 }}</td>
+            <td style="width: 50px;">
+              <a href="/list/{{ departamento.0 }}" class="btn btn-primary btn-flat  btn-xs  btnTest">
+                <i class="fas fa-plus"></i>
+              </a>
+              <a href="/edit/{{ departamento.0 }}" class="btn btn-warning btn-flat btn-xs  btnTest">
+                <i class="fas fa-edit"></i>
+              </a>
+              <form action="/delete/{{ departamento.0 }}" method="POST" class="btnDelete float-right">
+                <button type="submit" class="btn btn-danger btn-flat  btn-xs  ">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </form>
+
+            </td>
+          </tr>
+        {% endfor %}
+
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer">
+      <a href="/form" class="btn btn-primary btn-flat btnTest">
+        <i class="fas fa-plus"></i> Nuevo
+      </a>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascript %}
+  <script>
+
+    {% with messages = get_flashed_messages() %}
+      var error = '';
+      {% if messages %}
+        {% for message in messages %}
+          error += '{{ message }} ';
+        {% endfor %}
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: error,
+
+        })
+      {% endif %}
+    {% endwith %}
+    $('.btnDelete').submit(function (e) {
+      e.preventDefault()
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.value) {
+          this.submit();
+
+        }
+      })
+    })
+
+
+    $(function () {
+      $('#data').DataTable({
+        responsive: true,
+        autoWidth: false,
+      });
+    })
+  </script>
+{% endblock %}
